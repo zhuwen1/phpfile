@@ -15,6 +15,7 @@ $filename = $fileInfo['name'];
 $error = $fileInfo['error'];
 $size = $fileInfo['size'];
 
+$flag = true;//默认为真，用来处理是否为真实的图片类型
 //1.判断错误号
 if($error == 0){
     //判断文件大小是否符合要求
@@ -29,6 +30,11 @@ if($error == 0){
     if(!is_uploaded_file($tmp_name)){
         exit("文件不是通过http post方式上传过来的");
     }
+    if($flag){
+    	if(!getimagesize($tmp_name)){
+    		exit("不是真正的图片类型");
+    	}
+    }
     $path ='uploads';
     if(!file_exists($path)){
     	mkdir($path,0777,true);
@@ -37,7 +43,7 @@ if($error == 0){
     // $destination = $filename;
     $uniName = md5(uniqid(microtime(true),true)).'.'.$ext;
    	$destination = $path."/".$uniName;
-   //产生唯一名字
+   //产生唯一名字	
     if(move_uploaded_file($tmp_name,$destination)){
         echo "文件上传成功";
     }else{
